@@ -13,4 +13,6 @@ using ClaseORM.Models;
         }
 
         public DbSet<ClaseORM.Models.EstudianteUdla> EstudianteUdla { get; set; } = default!;
+
+public DbSet<ClaseORM.Models.Carrera> Carrera { get; set; } = default!;
     }

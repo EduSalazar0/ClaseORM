@@ -16,6 +16,7 @@ namespace ClaseORM.Models
         [EmailAddress]
         [AllowNull]
         public string Correo {  get; set; }
+
         public bool TieneBeca {  get; set; }
         public Carrera Carrera { get; set; } //Anclaje a la clase Carrera
         [ForeignKey("Carrera")]

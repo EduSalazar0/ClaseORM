@@ -9,23 +9,23 @@ using ClaseORM.Models;
 
 namespace ClaseORM.Controllers
 {
-    public class EstudianteUdlaController : Controller
+    public class CarrerasController : Controller
     {
         private readonly EstudiantesContext _context;
 
-        public EstudianteUdlaController(EstudiantesContext context)
+        public CarrerasController(EstudiantesContext context)
         {
             _context = context;
         }
 
-        // GET: EstudianteUdla
+        // GET: Carreras
         public async Task<IActionResult> Index()
         {
-            var estudiantesContext = _context.EstudianteUdla.Include(e => e.Carrera);
-            return View(await estudiantesContext.ToListAsync());
+            var ListaCarreras = await _context.Carrera.ToListAsync();
+            return View(ListaCarreras);
         }
 
-        // GET: EstudianteUdla/Details/5
+        // GET: Carreras/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -33,42 +33,39 @@ namespace ClaseORM.Controllers
                 return NotFound();
             }
 
-            var estudianteUdla = await _context.EstudianteUdla
-                .Include(e => e.Carrera)
-                .FirstOrDefaultAsync(m => m.IdBanner == id);
-            if (estudianteUdla == null)
+            var carrera = await _context.Carrera
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (carrera == null)
             {
                 return NotFound();
             }
 
-            return View(estudianteUdla);
+            return View(carrera);
         }
 
-        // GET: EstudianteUdla/Create
+        // GET: Carreras/Create
         public IActionResult Create()
         {
-            ViewData["IdCarrera"] = new SelectList(_context.Set<Carrera>(), "Id", "Name");
             return View();
         }
 
-        // POST: EstudianteUdla/Create
+        // POST: Carreras/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost] //Actualización en la base de datos
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdBanner,Name,FechaNacimiento,Correo,TieneBeca,IdCarrera")] EstudianteUdla estudianteUdla)
+        public async Task<IActionResult> Create([Bind("Id,Name")] Carrera carrera)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(estudianteUdla);
+                _context.Add(carrera);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdCarrera"] = new SelectList(_context.Set<Carrera>(), "Id", "Name", estudianteUdla.IdCarrera);
-            return View(estudianteUdla);
+            return View(carrera);
         }
 
-        // GET: EstudianteUdla/Edit/5
+        // GET: Carreras/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -76,23 +73,22 @@ namespace ClaseORM.Controllers
                 return NotFound();
             }
 
-            var estudianteUdla = await _context.EstudianteUdla.FindAsync(id);
-            if (estudianteUdla == null)
+            var carrera = await _context.Carrera.FindAsync(id);
+            if (carrera == null)
             {
                 return NotFound();
             }
-            ViewData["IdCarrera"] = new SelectList(_context.Set<Carrera>(), "Id", "Name", estudianteUdla.IdCarrera);
-            return View(estudianteUdla);
+            return View(carrera);
         }
 
-        // POST: EstudianteUdla/Edit/5
+        // POST: Carreras/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost] //Actualización en la base de datos
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdBanner,Name,FechaNacimiento,Correo,TieneBeca,IdCarrera")] EstudianteUdla estudianteUdla)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Carrera carrera)
         {
-            if (id != estudianteUdla.IdBanner)
+            if (id != carrera.Id)
             {
                 return NotFound();
             }
@@ -101,12 +97,12 @@ namespace ClaseORM.Controllers
             {
                 try
                 {
-                    _context.Update(estudianteUdla);
+                    _context.Update(carrera);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!EstudianteUdlaExists(estudianteUdla.IdBanner))
+                    if (!CarreraExists(carrera.Id))
                     {
                         return NotFound();
                     }
@@ -117,11 +113,10 @@ namespace ClaseORM.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdCarrera"] = new SelectList(_context.Set<Carrera>(), "Id", "Name", estudianteUdla.IdCarrera);
-            return View(estudianteUdla);
+            return View(carrera);
         }
 
-        // GET: EstudianteUdla/Delete/5
+        // GET: Carreras/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -129,35 +124,34 @@ namespace ClaseORM.Controllers
                 return NotFound();
             }
 
-            var estudianteUdla = await _context.EstudianteUdla
-                .Include(e => e.Carrera)
-                .FirstOrDefaultAsync(m => m.IdBanner == id);
-            if (estudianteUdla == null)
+            var carrera = await _context.Carrera
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (carrera == null)
             {
                 return NotFound();
             }
 
-            return View(estudianteUdla);
+            return View(carrera);
         }
 
-        // POST: EstudianteUdla/Delete/5
+        // POST: Carreras/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var estudianteUdla = await _context.EstudianteUdla.FindAsync(id);
-            if (estudianteUdla != null)
+            var carrera = await _context.Carrera.FindAsync(id);
+            if (carrera != null)
             {
-                _context.EstudianteUdla.Remove(estudianteUdla);
+                _context.Carrera.Remove(carrera);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool EstudianteUdlaExists(int id)
+        private bool CarreraExists(int id)
         {
-            return _context.EstudianteUdla.Any(e => e.IdBanner == id);
+            return _context.Carrera.Any(e => e.Id == id);
         }
     }
 }
